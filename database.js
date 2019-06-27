@@ -8,14 +8,15 @@ const config = {
   authentication: {
     options: {
       userName: 'dicoding', // update me
-      password: 'Fahmi1234567890' // update me
-    },
+      password: 'Fahmi1234567890', // update me
+       },
     type: 'default'
   },
   server: 'dicodingbayar.database.windows.net', // update me
   options: {
     database: 'sportest', // update me
-    encrypt: true
+    encrypt: true,
+    rowCollectionOnRequestCompletion:true
   }
 }
 const connection = new Connection(config)
@@ -35,19 +36,25 @@ function queryDatabase(onClear) {
 
   // Read all rows from table
   // eslint-disable-next-line handle-callback-err
-  const request = new Request('SELECT * FROM USERS', function(
-    err,
-    rowCount,
-    rows
-  ) {
-    console.log(rowCount + ' row(s) returned')
-  })
-
-  request.on('row', function(columns) {
-    onClear(columns)
+  const request = new Request('SELECT * FROM USERS',(err,rowCount,rows)=>{
+    if(err) throw err
+    onClear(rows)
   })
   connection.execSql(request)
 }
 
-module.exports = connection
+function insertDatabase(name,chat,onClear) {
+  console.log('Reading rows from the Table...')
+
+  // Read all rows from table
+  // eslint-disable-next-line handle-callback-err
+  const request = new Request(`INSERT INTO USERS (name,family) values('${name}','${chat}')`,(err,rowCount,rows)=>{
+    if(err) throw err
+    onClear(rows)
+  })
+  connection.execSql(request)
+}
+
+module.exports.connection = connection
 module.exports.runSelect = queryDatabase
+module.exports.insert = insertDatabase
