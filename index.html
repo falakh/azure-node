@@ -24,7 +24,7 @@
     <script>
 
       $(document).ready(()=>{
-        var lnk = ("http://"+location.host+"/api")
+        var lnk = ("https://"+location.host+"/api")
         $.get(lnk,(data)=>{
           console.log(data)
           data.forEach(element => {
